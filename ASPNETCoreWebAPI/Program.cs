@@ -6,7 +6,6 @@ using ASPNETCoreWebAPI.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +19,6 @@ builder.Services.Configure<JsonOptions>(options => new JsonSerializerOptions(Jso
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
-//builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddMemoryCache();
 builder.Services.AddSwagger();
 
@@ -37,15 +35,13 @@ builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.DocExpansion(DocExpansion.None);
-        options.DisplayRequestDuration();
-    });
+    app.UseSwaggerUI(options => { options.DisplayRequestDuration(); });
 }
+
+app.UseHttpsRedirection();
 
 // Add Middlewares
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
@@ -53,13 +49,7 @@ app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 // Map API endpoints
 app.MapSampleEndpoint();
 
-app.UseHttpsRedirection();
-
 // Migrate latest database changes during startup
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    context.Database.Migrate();
-}
+app.ApplyMigrations();
 
 app.Run();

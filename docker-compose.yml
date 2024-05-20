@@ -2,53 +2,38 @@ version: '3.4'
 
 services:
   aspnetcorewebapi:
-    ports:
-      - "8080:80"
-    depends_on:
-      - "weatherpostgres"
+    image: ${DOCKER_REGISTRY-}aspnetcorewebapi
+    container_name: aspnetcorewebapi
     build:
       context: .
       dockerfile: ASPNETCoreWebAPI/Dockerfile
-  
-  weatherpostgres:
-    image: postgres:latest
     ports:
-      - "5432"
-    volumes:
-      - db_volume:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: POSTGRESS_PASSWORD
-      POSTGRES_DB: WeatherDb
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - "postgres-db"
+      - "rabbitmq-server"
 
-  rabbitmq:
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: NewsAndMedia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_volume:/var/lib/postgresql/data      
+
+  rabbitmq-server:
     image: rabbitmq:3-management
     ports:
-      # AMQP protocol port
       - "5672:5672"
-      # HTTP management UI
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: myuser
-      RABBITMQ_DEFAULT_PASS: mypassword 
-    
-  weatherforecastadmin:
-    build:
-      context: .
-      dockerfile: WeatherForecastAdmin/Dockerfile
-    ports:
-      - "8081:80"
-    depends_on:
-      - "rabbitmq"
-
-  weatherforecastprocessor:
-    build:
-      context: .
-      dockerfile: WeatherForecastProcessor/Dockerfile
-    depends_on:
-      - "weatherpostgres"
-      - "rabbitmq"
-      - "aspnetcorewebapi"
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest 
 
 volumes:
   db_volume:
