@@ -41,6 +41,7 @@ var app = builder.Build();
     app.UseSwaggerUI(options => { options.DisplayRequestDuration(); });
 }
 
+// > dotnet dev-certs https --check --trust
 app.UseHttpsRedirection();
 
 // Add Middlewares

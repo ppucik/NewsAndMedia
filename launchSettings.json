@@ -1,13 +1,13 @@
 {
-  "profiles": {
-    "Docker Compose": {
-      "commandName": "DockerCompose",
-      "commandVersion": "1.0",
-      "serviceActions": {
-        "aspnetcorewebapi": "StartDebugging",
-        "postgres-db": "StartWithoutDebugging",
-        "rabbitmq-server": "StartWithoutDebugging"
-      }
+    "profiles": {
+        "Docker Compose": {
+            "commandName": "DockerCompose",
+            "commandVersion": "1.0",
+            "serviceActions": {
+                "aspnetcorewebapi": "StartDebugging",
+                "postgres-db": "StartWithoutDebugging",
+                "rabbitmq-server": "StartWithoutDebugging"
+            }
+        }
     }
-  }
 }
