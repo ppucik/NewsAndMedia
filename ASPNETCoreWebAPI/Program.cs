@@ -1,6 +1,5 @@
 using ASPNETCoreWebAPI.Endpoints;
 using ASPNETCoreWebAPI.Extensions;
-using ASPNETCoreWebAPI.Middleware;
 using ASPNETCoreWebAPI.Repositories;
 using ASPNETCoreWebAPI.Services;
 using FluentValidation;
@@ -17,6 +16,9 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Si
 // JSON serialization
 builder.Services.Configure<JsonOptions>(options => new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true });
 
+// Global exception handling
+builder.Services.AddGlobalErrorHandler();
+
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddMemoryCache();
@@ -27,10 +29,6 @@ builder.Services.AddRabbitMqService(builder.Configuration);
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 builder.Services.AddSingleton<IConsumerService, ConsumerService>();
 builder.Services.AddHostedService<ConsumerHostedService>();
-
-// Global exception handling
-builder.Services.AddProblemDetails();
-builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -45,7 +43,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 // Add Middlewares
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseGlobalErrorHandlerMiddleware();
 
 // Map API endpoints
 app.MapSampleEndpoint();

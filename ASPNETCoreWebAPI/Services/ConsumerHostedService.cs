@@ -11,11 +11,8 @@ public class ConsumerHostedService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await _consumerService.ReadMessgaes();
-    }
+        //stoppingToken.ThrowIfCancellationRequested();
 
-    public override void Dispose()
-    {
-        base.Dispose();
+        await _consumerService.ReadMessgaes();
     }
 }

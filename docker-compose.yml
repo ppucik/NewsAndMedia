@@ -10,6 +10,11 @@ services:
     ports:
       - "5000:5000"
       - "5001:5001"
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=anasoft 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx 
+    volumes:
+      - C:\users\admin\.aspnet\https:/https/ aspnetcorewebapi
     depends_on:
       - "postgres-db"
       - "rabbitmq-server"
