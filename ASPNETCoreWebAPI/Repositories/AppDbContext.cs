@@ -1,5 +1,7 @@
 ﻿using ASPNETCoreWebAPI.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Text;
 
 namespace ASPNETCoreWebAPI.Repositories;
 
@@ -16,6 +18,7 @@ public class AppDbContext : DbContext
     public virtual DbSet<Author> Authors { get; set; } = null!;
     public virtual DbSet<AuthorArticle> AuthorArticles { get; set; } = null!;
     public virtual DbSet<Image> Images { get; set; } = null!;
+    public virtual DbSet<AuditLog> AuditLogs { get; set; } = null!;
 
     // Creating and configuring a Models 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -125,5 +128,46 @@ public class AppDbContext : DbContext
                 .Property(s => s.CreatedAt)
                 .IsRequired();
         });
+    }
+
+    // Securing and Tracking Data Change
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var modifiedEntities = ChangeTracker.Entries()
+            .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)
+            .ToList();
+
+        foreach (var me in modifiedEntities)
+        {
+            var auditLog = new AuditLog
+            {
+                Action = me.State.ToString(),
+                TimeStamp = DateTime.UtcNow,
+                EntityType = me.Entity.GetType().ToString(),
+                Changes = GetEntityChanges(me)
+            };
+
+            AuditLogs.Add(auditLog);
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    private static string GetEntityChanges(EntityEntry entry)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var prop in entry.OriginalValues.Properties)
+        {
+            var originalValue = entry.OriginalValues[prop];
+            var currentValue = entry.CurrentValues[prop];
+
+            if (!Equals(originalValue, currentValue))
+            {
+                sb.AppendLine($"{prop.Name}: From {originalValue} to {currentValue}");
+            }
+        }
+
+        return sb.ToString();
     }
 }
