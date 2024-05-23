@@ -3,6 +3,7 @@ using ASPNETCoreWebAPI.Services;
 using ASPNETCoreWebAPI.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System.Reflection;
 
 namespace ASPNETCoreWebAPI.Endpoints;
 
@@ -14,11 +15,17 @@ public static class SampleEndpoint
             .AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory)
             .WithOpenApi();
 
+        app.MapGet("/", (IHostEnvironment env, IConfiguration cfg) => @$"
+            Hello {env.ApplicationName}!
+            Web API: {DateTime.Now.ToLongDateString()} '{DateTime.Now.ToLongTimeString()}'
+            Version: {Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version}, {File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)}
+            ENV: {env.EnvironmentName}").WithSummary("Web API Info").WithOpenApi();
+
         api.MapPost("/Calculation/{key:int}", Calculation)
             .Produces<CalculationResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status422UnprocessableEntity)
             .WithSummary("Výpočet")
-            .WithDescription("Popis výpočtu");
+            .WithDescription("Popis výpočtu obsahuje súbor README.md");
     }
 
     private async static Task<IResult> Calculation(

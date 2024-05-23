@@ -1,14 +1,14 @@
 ===========================================================
- GIB Web API
+ ASP.NET Core Web API
 ===========================================================
 The tech stack used will be the following:
-- base framework:		ASP.NET 7
-- Endpoint framework:	Minimal API
-- Auth provider:		None
-- Input validation:		FluentValidations
-- Data storage:			PostgreSQL
-- API visualization:	SwaggerUI
-- REPR Design Pattern:	https://deviq.com/design-patterns/repr-design-pattern
+- base framework:       ASP.NET 7
+- Endpoint framework:   Minimal API
+- Auth provider:        None
+- Input validation:     FluentValidations
+- Data storage:         PostgreSQL
+- API visualization:    SwaggerUI
+- REPR Design Pattern:  https://deviq.com/design-patterns/repr-design-pattern
 
 ===========================================================
  POSTGRESQL
@@ -20,6 +20,14 @@ UserName: postgres
 Password: postgres
 
 pqAdmin: https://www.pgadmin.org/download/pgadmin-4-windows/
+
+===========================================================
+ RABBITMQ
+===========================================================
+HostName: localhost
+Port: 5672
+Username: "guest"
+Password: "guest"
 
 ===========================================================
  CERTIFICATE
@@ -35,4 +43,4 @@ pqAdmin: https://www.pgadmin.org/download/pgadmin-4-windows/
 ===========================================================
 > docker build -t aspnetcorewebapi -f ASPNETCoreWebAPI/Dockefile .
 > docker pull mcr.microsoft.com/dotnet/samples:aspnetapp
-> docker run --rm -it -p 5000:5000 -p 5001:5001 -e ASPNETCORE_URLS="https://+;http://+" -e ASPNETCORE_HTTPS_PORTS=5001 -e ASPNETCORE_Kestrel__Certificates__Default__Password="anasoft" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx -v C:\users\admin\.aspnet\https:/https/ aspnetcorewebapi
+> docker run --rm -it -p 5000:5000 -p 5001:5001 -e ASPNETCORE_URLS="https://+;http://+" -e ASPNETCORE_HTTPS_PORTS=5001 -e ASPNETCORE_Kestrel__Certificates__Default__Password="anasoft" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx -v %USERPROFILE%\.aspnet\https:/https/ aspnetcorewebapi

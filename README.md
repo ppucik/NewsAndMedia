@@ -31,9 +31,9 @@
 	- výsledok výpočtu pošlite na vami vytvorenú queue v **RabbitMQ** a následne ju vráťte ako response z endpointu vo formáte JSON nasledovne:
 ```json
 	{
-		"computed_value": vypočítaná hodnota zapísaná do global storage
-		"input_value": vložená hodnota input
-		"previous_value": predošlá hodnota v global storage pred výpočtom
+		"computed_value": //vypočítaná hodnota zapísaná do global storage
+		"input_value":    //vložená hodnota input
+		"previous_value": //predošlá hodnota v global storage pred výpočtom
 	}
 ```
 7. Vytvorte hosted servicu, ktorá bude na pozadí prijímať správy z **RabbitMQ** a bude ich vypisovať do konzoly. Servica sa spustí pri štarte aplikácie.
