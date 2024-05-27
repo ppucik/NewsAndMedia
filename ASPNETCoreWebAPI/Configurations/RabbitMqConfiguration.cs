@@ -6,4 +6,9 @@ public class RabbitMqConfiguration
     public int Port { get; init; }
     public string Username { get; init; } = null!;
     public string Password { get; init; } = null!;
+
+    public override string ToString()
+    {
+        return $"amqp://{Username}:{Password}@{HostName}:{Port}";
+    }
 }
