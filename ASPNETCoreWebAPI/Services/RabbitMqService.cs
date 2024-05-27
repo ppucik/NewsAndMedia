@@ -15,6 +15,7 @@ public class RabbitMqService : IRabbitMqService
     {
         _configuration = options.Value;
     }
+
     public IConnection CreateChannel()
     {
         // configuration from appsettings.json

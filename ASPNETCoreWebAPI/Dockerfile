@@ -20,6 +20,7 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+# It is not recommended to copy certificates into the image
 RUN mkdir -p /app/certificates
 COPY ./Certificates/aspnetapp.pfx /app/certificates
 

@@ -1,12 +1,13 @@
-﻿namespace ASPNETCoreWebAPI.Entities;
+﻿using ASPNETCoreWebAPI.Entities.Interfaces;
+
+namespace ASPNETCoreWebAPI.Entities;
 
 /// <summary>
 /// Článok
 /// </summary>
 //[EntityTypeConfiguration(typeof(ArticleConfiguration))]
-public class Article
+public class Article : IAuditableEntity
 {
-    //[Key]
     public long Id { get; set; } // Primary key
 
     public string Title { get; set; } = null!; // Index
@@ -17,4 +18,8 @@ public class Article
 
     public long SiteId { get; set; }
     public virtual Site Site { get; set; } = null!; // One-To-Many
+
+    // Implement interface AuditableEntity
+    public DateTime Created { get; set; }
+    public DateTime? Modified { get; set; }
 }

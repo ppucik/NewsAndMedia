@@ -1,9 +1,11 @@
-﻿namespace ASPNETCoreWebAPI.Entities;
+﻿using ASPNETCoreWebAPI.Entities.Interfaces;
+
+namespace ASPNETCoreWebAPI.Entities;
 
 /// <summary>
 /// Autor
 /// </summary>
-public class Author
+public class Author : IAuditableEntity
 {
     public long Id { get; set; } // Primary key
 
@@ -14,4 +16,8 @@ public class Author
     public virtual ICollection<Article> Articles { get; set; } = null!; // Many-To-Many
 
     public virtual ICollection<AuthorArticle> AuthorArticles { get; set; } = null!;
+
+    // Implement interface AuditableEntity
+    public DateTime Created { get; set; }
+    public DateTime? Modified { get; set; }
 }

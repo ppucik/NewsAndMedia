@@ -25,8 +25,7 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Varianta č.2
-        //modelBuilder.ApplyConfiguration(new ArticleConfiguration());
+        // Varianta č.1
 
         modelBuilder.Entity<Article>(entity =>
         {
@@ -128,6 +127,12 @@ public class AppDbContext : DbContext
                 .Property(s => s.CreatedAt)
                 .IsRequired();
         });
+
+        // Varianta č.2
+        //modelBuilder.ApplyConfiguration(new ArticleConfiguration());
+
+        // Varianta č.3
+        //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
     // Securing and Tracking Data Change

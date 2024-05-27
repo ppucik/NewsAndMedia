@@ -1,6 +1,7 @@
 using ASPNETCoreWebAPI.Endpoints;
 using ASPNETCoreWebAPI.Extensions;
 using ASPNETCoreWebAPI.Repositories;
+using ASPNETCoreWebAPI.Repositories.Interceptors;
 using ASPNETCoreWebAPI.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.Json;
@@ -19,8 +20,14 @@ builder.Services.Configure<JsonOptions>(options => new JsonSerializerOptions(Jso
 // Global exception handling
 builder.Services.AddGlobalErrorHandler();
 
-// Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+// Register interceptors
+builder.Services.AddSingleton<UpdateAuditableInterceptor>();
+
+// Add services to the container
+builder.Services.AddDbContext<AppDbContext>((sp, options) => options
+    .UseNpgsql(connectionString)
+    .AddInterceptors(sp.GetRequiredService<UpdateAuditableInterceptor>())
+);
 builder.Services.AddMemoryCache();
 builder.Services.AddSwagger();
 
@@ -32,7 +39,7 @@ builder.Services.AddHostedService<ConsumerHostedService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
