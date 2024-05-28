@@ -52,6 +52,7 @@ builder.Services.AddHealthChecks()
     .AddNpgSql(connectionString!)
     .AddRabbitMQ(new Uri(rabbitMqConfiguration.ToString()))
     .AddCheck<DatabaseHealthCheck>("custom-sql", HealthStatus.Unhealthy);
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
 
 var app = builder.Build();
 
@@ -75,6 +76,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions()
     Predicate = _ => true,
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
+app.MapHealthChecksUI();
 
 // Migrate latest database changes during startup
 app.ApplyMigrations();
