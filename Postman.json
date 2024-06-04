@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "807b94dc-b377-4b98-a74b-d6b6b9bbe90c",
+		"name": "NewsAndMedia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15333531",
+		"_collection_link": "https://speeding-moon-98887.postman.co/workspace/ANASOFT~195f5e4c-f005-4da7-b506-8f214f28ebcf/collection/15333531-807b94dc-b377-4b98-a74b-d6b6b9bbe90c?action=share&source=collection_link&creator=15333531"
+	},
+	"item": [
+		{
+			"name": "Web API Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7076/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7076",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"input\": 10000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7076/api/calculation/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7076",
+					"path": [
+						"api",
+						"calculation",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Docker-health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/health",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Docker-http",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"input\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/calculation/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"calculation",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Docker-https",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"input\": 1000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/calculation/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"calculation",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

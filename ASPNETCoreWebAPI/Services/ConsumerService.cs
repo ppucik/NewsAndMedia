@@ -47,9 +47,9 @@ public class ConsumerService : IConsumerService, IDisposable
         await Task.CompletedTask;
     }
 
-    private void HandleMessage(string content)
+    private void HandleMessage(string context)
     {
-        _logger.LogInformation($"Consumer received: {content}");
+        _logger.LogInformation($"Consumer received: {context}");
     }
 
     public void Dispose()

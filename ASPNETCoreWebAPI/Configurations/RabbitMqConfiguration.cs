@@ -7,8 +7,8 @@ public class RabbitMqConfiguration
     public string Username { get; init; } = null!;
     public string Password { get; init; } = null!;
 
-    public override string ToString()
+    public Uri GetConnectionString()
     {
-        return $"amqp://{Username}:{Password}@{HostName}:{Port}";
+        return new Uri($"amqp://{Username}:{Password}@{HostName}:{Port}");
     }
 }

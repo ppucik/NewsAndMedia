@@ -1,37 +1,32 @@
 ﻿using ASPNETCoreWebAPI.Contracts;
 using ASPNETCoreWebAPI.Services;
 using ASPNETCoreWebAPI.Validation;
+using Carter;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using System.Reflection;
 
 namespace ASPNETCoreWebAPI.Endpoints;
 
-public static class SampleEndpoint
+public class MathEndpoint : ICarterModule
 {
-    public static void MapSampleEndpoint(this WebApplication app)
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
         var api = app.MapGroup("api")
             .AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory)
             .WithOpenApi();
 
-        app.MapGet("/", (IHostEnvironment env, IConfiguration cfg) => @$"
-            Hello {env.ApplicationName}!
-            Web API: {DateTime.Now.ToLongDateString()} '{DateTime.Now.ToLongTimeString()}'
-            Version: {Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version}, {File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)}
-            ENV: {env.EnvironmentName}").WithSummary("Web API Info").WithOpenApi();
-
-        api.MapPost("/Calculation/{key:int}", Calculation)
+        api.MapPost("/calculation/{key:int}", Calculation)
             .Produces<CalculationResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status422UnprocessableEntity)
             .WithSummary("Výpočet")
             .WithDescription("Popis výpočtu obsahuje súbor README.md");
     }
 
-    private async static Task<IResult> Calculation(
+    private async Task<IResult> Calculation(
         [FromRoute] int key,
         [Validate][FromBody] CalculationRequest request,
-        IPublisherService publisherService,
+        IPublisherService publisherService, //IBus massTransitBus,
         IMemoryCache memoryCache)
     {
         const double DEFAULT_VALUE = 2d;
@@ -80,7 +75,8 @@ public static class SampleEndpoint
         memoryCache.Set(key, result, memoryOptions);
 
         // výsledok výpočtu pošlite na vami vytvorenú queue v RabbitMQ
-        await publisherService.SendMessgaes(result);
+        await publisherService.SendMessgaes(result);    // varianta č.1
+        //await massTransitBus.Publish(result);         // varianta č.2
 
         // následne ju vráťte ako response z endpointu vo formáte JSON
         return TypedResults.Ok(result);

@@ -25,7 +25,7 @@ internal sealed class DatabaseHealthCheck : IHealthCheck
 
             await command.ExecuteScalarAsync(cancellationToken);
 
-            return HealthCheckResult.Healthy();
+            return HealthCheckResult.Healthy("Health check database OK");
         }
         catch (Exception ex)
         {
