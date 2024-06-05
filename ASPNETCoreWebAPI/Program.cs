@@ -28,6 +28,9 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Si
 // JSON serialization
 builder.Services.Configure<JsonOptions>(options => new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true });
 
+// Add MediatR
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(assembly));
+
 // Global exception handling
 builder.Services.AddGlobalErrorHandler();
 

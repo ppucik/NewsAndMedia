@@ -14,7 +14,7 @@ public static class SwaggerExtension
         {
             options.SwaggerDoc(version, new OpenApiInfo
             {
-                Title = asm.Name,
+                Title = "News and Media Web API",
                 Description = $"Version: {asm.Version?.ToString()}, Date: {File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)}",
                 Version = version
             });
