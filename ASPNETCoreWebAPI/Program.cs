@@ -15,18 +15,21 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-var assembly = typeof(Program).Assembly;
+var assembly = typeof(Program).Assembly;  // AppDomain.CurrentDomain.GetAssemblies()
 
 // Configurations
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var rabbitMqConfiguration = new RabbitMqConfiguration();
 builder.Configuration.GetSection(nameof(RabbitMqConfiguration)).Bind(rabbitMqConfiguration);
 
+// JSON serialization
+builder.Services.Configure<JsonOptions>(options => new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true });
+
 // Add validation
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
-// JSON serialization
-builder.Services.Configure<JsonOptions>(options => new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true });
+// Add AutoMapper
+builder.Services.AddAutoMapper(assembly);
 
 // Add MediatR
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(assembly));

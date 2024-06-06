@@ -1,4 +1,6 @@
-﻿namespace ASPNETCoreWebAPI.Contracts;
+﻿using FluentValidation;
+
+namespace ASPNETCoreWebAPI.Contracts;
 
 /// <summary>
 /// Zaevidovanie nového článku
@@ -19,4 +21,12 @@ public class CreateArticleRequest
     /// TD web stránky
     /// </summary>
     public long SiteId { get; set; }
+
+    public class Validator : AbstractValidator<CreateArticleRequest>
+    {
+        public Validator()
+        {
+            // TODO: ...
+        }
+    }
 }

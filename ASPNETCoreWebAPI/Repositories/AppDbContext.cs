@@ -133,6 +133,32 @@ public class AppDbContext : DbContext
 
         // Varianta č.3
         //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        #region Seed initial data
+
+        var utcNow = DateTime.UtcNow;
+
+        modelBuilder.Entity<Site>().HasData(
+            new Site { Id = 1, CreatedAt = utcNow, Created = utcNow }
+        );
+
+        modelBuilder.Entity<Article>().HasData(
+            new Article { Id = 1, Title = "Zadanie .NET Senior Developer", SiteId = 1, Created = utcNow }
+        );
+
+        modelBuilder.Entity<Author>().HasData(
+            new Author { Id = 1, Name = "Peter Púčik", Created = utcNow }
+        );
+
+        modelBuilder.Entity<Image>().HasData(
+            new Image { Id = 1, Description = "Popis obrázku", AuthorId = 1, Created = utcNow }
+        );
+
+        modelBuilder.Entity<AuthorArticle>().HasData(
+            new AuthorArticle { AuthorId = 1, ArticleId = 1 }
+        );
+
+        #endregion
     }
 
     // Securing and Tracking Data Change

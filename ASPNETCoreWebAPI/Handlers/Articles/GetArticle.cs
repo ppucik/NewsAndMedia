@@ -1,5 +1,6 @@
 ﻿using ASPNETCoreWebAPI.Contracts;
 using ASPNETCoreWebAPI.Repositories;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,28 +16,23 @@ public class GetArticle
     public class QueryHandler : IRequestHandler<Query, ArticleResponse?>
     {
         private readonly AppDbContext _dataContext;
+        private readonly IMapper _mapper;
 
-        public QueryHandler(AppDbContext dataContext)
+        public QueryHandler(AppDbContext dataContext, IMapper mapper)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<ArticleResponse?> Handle(Query query, CancellationToken cancellationToken)
         {
-            var response = await _dataContext.Articles
+            var article = await _dataContext.Articles
                 .AsNoTracking()
-                .Select(article => new ArticleResponse
-                {
-                    Id = article.Id,
-                    Title = article.Title,
-                    Authors = String.Join(", ", article.Authors.Select(a => a.Name)) ?? "(anonymous)",
-                    SiteId = article.Site.Id,
-                    Created = article.Created,
-                    Modified = article.Modified
-                })
+                .Include(e => e.Authors)
+                .Include(e => e.Site)
                 .FirstOrDefaultAsync(article => article.Id == query.Id);
 
-            return response;
+            return _mapper.Map<ArticleResponse>(article);
         }
     }
 }

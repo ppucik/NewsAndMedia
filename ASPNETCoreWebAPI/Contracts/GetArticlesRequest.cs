@@ -1,19 +1,14 @@
 ﻿namespace ASPNETCoreWebAPI.Contracts;
 
 /// <summary>
-/// Dotaz na zoznam článku
+/// Dotaz na zoznam článkov
 /// </summary>
 public class GetArticlesRequest
 {
     /// <summary>
-    /// Časť názvu článku (slovo)
+    /// Časť názvu článku, autor (slovo)
     /// </summary>
     public string? FullText { get; set; }
-
-    /// <summary>
-    /// Zoznam autorov
-    /// </summary>
-    public long? Author { get; set; }
 
     /// <summary>
     /// TD web stránky

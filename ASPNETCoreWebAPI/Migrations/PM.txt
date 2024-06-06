@@ -1,7 +1,7 @@
 ﻿PM> dotnet ef migrations add InitialMigration
 PM> dotnet ef database update
 
-PM> Get-Migration
+PM> Get-Migration -context AppDbContext
 PM> Add-Migration [name]				-- To add a specific migration
 PM> Remove-Migration					-- To remove last migration
 PM> Remove-Migration -Force				-- To unapply and remove last migration
