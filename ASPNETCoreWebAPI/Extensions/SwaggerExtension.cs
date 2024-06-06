@@ -1,5 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 namespace ASPNETCoreWebAPI.Extensions;
 
@@ -18,6 +19,12 @@ public static class SwaggerExtension
                 Description = $"Version: {asm.Version?.ToString()}, Date: {File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location)}",
                 Version = version
             });
+
+            // Include XML comments
+            var xmlFilePath = Path.Combine(AppContext.BaseDirectory, $"{asm.Name}.xml");
+            options.IncludeXmlComments(xmlFilePath, true);
+            options.IncludeXmlCommentsWithRemarks(xmlFilePath, true);
+            options.IncludeXmlCommentsFromInheritDocs(includeRemarks: true, excludedTypes: typeof(string));
         });
     }
 }

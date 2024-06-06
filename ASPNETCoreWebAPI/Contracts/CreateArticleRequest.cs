@@ -26,7 +26,19 @@ public class CreateArticleRequest
     {
         public Validator()
         {
-            // TODO: ...
+            RuleFor(c => c.Title)
+                .MinimumLength(10)
+                .WithMessage("Minimálna dĺžka názvu musí byť 10 znakov")
+                .MaximumLength(1000)
+                .WithMessage("Maximálna dĺžka názvu môže byť 1000 znakov");
+
+            RuleFor(c => c.Authors)
+                .Must(x => x.Any())
+               .WithMessage("Musí byť zadaný aspoň jedno ID autora");
+
+            RuleFor(c => c.SiteId)
+                .GreaterThan(0)
+                .WithMessage("Hodnota ID stránky musí byť väčšia ako nula");
         }
     }
 }

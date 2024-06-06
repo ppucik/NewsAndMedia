@@ -18,7 +18,7 @@ public class CalculationRequest
         {
             RuleFor(c => c.Input)
                 .GreaterThan(0)
-                .WithMessage($"Hodnota Input musí byť väčšia ako nula");
+                .WithMessage("Hodnota Input musí byť väčšia ako nula");
         }
     }
 }

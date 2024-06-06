@@ -1,4 +1,6 @@
-﻿namespace ASPNETCoreWebAPI.Contracts;
+﻿using System.ComponentModel;
+
+namespace ASPNETCoreWebAPI.Contracts;
 
 /// <summary>
 /// Dotaz na zoznam článkov
@@ -8,7 +10,7 @@ public class GetArticlesRequest
     /// <summary>
     /// Časť názvu článku, autor (slovo)
     /// </summary>
-    public string? FullText { get; set; }
+    public string? SearchText { get; set; }
 
     /// <summary>
     /// TD web stránky
@@ -16,12 +18,14 @@ public class GetArticlesRequest
     public long? SiteId { get; set; }
 
     /// <summary>
-    /// Číslo stránky
+    /// Číslo stránky (dafault 1)
     /// </summary>
-    public int PageIndex { get; set; } = 1;
+    [DefaultValue(1)]
+    public int? Page { get; set; } = 1;
 
     /// <summary>
-    /// Počet záznamov
+    /// Počet záznamov (dafault 10)
     /// </summary>
-    public int PageCount { get; set; } = 10;
+    [DefaultValue(10)]
+    public int? PageSize { get; set; } = 10;
 }

@@ -10,6 +10,7 @@ public class GetArticles
 {
     public class Query : IRequest<IReadOnlyCollection<ArticleResponse>>
     {
+        public required GetArticlesRequest Request { get; set; } = new();
     }
 
     public class QueryHandler : IRequestHandler<Query, IReadOnlyCollection<ArticleResponse>>
@@ -25,11 +26,21 @@ public class GetArticles
 
         public async Task<IReadOnlyCollection<ArticleResponse>> Handle(Query query, CancellationToken cancellationToken)
         {
+            var request = query.Request;
+            var searchText = request.SearchText?.ToUpper();
+            var pageIndex = request.Page ?? 1;
+            var pageSize = request.PageSize ?? 10;
+
             var articles = await _dataContext.Articles
                 .AsNoTracking()
-                .Include(e => e.Authors)
-                .Include(e => e.Site)
+                .Include(a => a.Authors)
+                .Include(a => a.Site)
+                .Where(a => string.IsNullOrEmpty(searchText) || (
+                    a.Title.ToUpper().Contains(searchText) ||
+                    a.Authors.Any(a => a.Name.ToUpper().Contains(searchText))))
                 .OrderBy(article => article.Title)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
             return _mapper.Map<IReadOnlyCollection<ArticleResponse>>(articles);

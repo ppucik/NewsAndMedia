@@ -38,23 +38,31 @@ public class NewsEndpoint : ICarterModule
             .WithSummary("Vymazanie článku");
     }
 
-    private async Task<IResult> GetArticles(IMediator mediator)
+    private async Task<IResult> GetArticles(
+        [AsParameters] GetArticlesRequest request,
+        IMediator mediator)
     {
-        var result = await mediator.Send(new GetArticles.Query());
+        var query = new GetArticles.Query { Request = request };
+        var result = await mediator.Send(query);
 
         return TypedResults.Ok(result);
     }
 
-    private async Task<IResult> GetArticle([FromRoute] int id, IMediator mediator)
+    private async Task<IResult> GetArticle(
+        [FromRoute] int id,
+        IMediator mediator)
     {
-        var result = await mediator.Send(new GetArticle.Query() { Id = id });
+        var query = new GetArticle.Query() { Id = id };
+        var result = await mediator.Send(query);
 
         return result is not null
             ? TypedResults.Ok(result)
             : TypedResults.NotFound();
     }
 
-    private async Task<IResult> CreateArticle([FromBody] CreateArticleRequest request, IMediator mediator)
+    private async Task<IResult> CreateArticle(
+        [Validate][FromBody] CreateArticleRequest request,
+        IMediator mediator)
     {
         var command = new CreateArticle.Command { Request = request };
         var result = await mediator.Send(command);
@@ -62,7 +70,10 @@ public class NewsEndpoint : ICarterModule
         return TypedResults.Created($"/api/articles/{result}", result);
     }
 
-    private async Task<IResult> UpdateArticle([FromRoute] int id, [FromBody] UpdateArticleRequest request, IMediator mediator)
+    private async Task<IResult> UpdateArticle(
+        [FromRoute] int id,
+        [Validate][FromBody] UpdateArticleRequest request,
+        IMediator mediator)
     {
         var command = new UpdateArticle.Command { Id = id, Request = request };
         var result = await mediator.Send(command);
@@ -70,7 +81,9 @@ public class NewsEndpoint : ICarterModule
         return TypedResults.Ok();
     }
 
-    private async Task<IResult> DeleteArticle([FromRoute] int id, IMediator mediator)
+    private async Task<IResult> DeleteArticle(
+        [FromRoute] int id,
+        IMediator mediator)
     {
         var command = new DeleteArticle.Command { Id = id };
         var result = await mediator.Send(command);
