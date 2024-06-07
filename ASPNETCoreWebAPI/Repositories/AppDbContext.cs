@@ -83,6 +83,28 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<Image>(entity =>
+        {
+            entity.ToTable(nameof(Image));
+
+            entity.HasKey(i => i.Id);
+
+            entity
+                .Property(i => i.Description)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<Site>(entity =>
+        {
+            entity.ToTable(nameof(Site));
+
+            entity.HasKey(s => s.Id);
+
+            entity
+                .Property(s => s.CreatedAt)
+                .IsRequired();
+        });
+
         //modelBuilder.Entity<AuthorArticle>(entity =>
         //{
         //    entity.ToTable(nameof(AuthorArticle));
@@ -105,28 +127,6 @@ public class AppDbContext : DbContext
         //        .HasForeignKey(aa => aa.ArticleId)
         //        .OnDelete(DeleteBehavior.NoAction);
         //});
-
-        modelBuilder.Entity<Image>(entity =>
-        {
-            entity.ToTable(nameof(Image));
-
-            entity.HasKey(i => i.Id);
-
-            entity
-                .Property(i => i.Description)
-                .IsRequired();
-        });
-
-        modelBuilder.Entity<Site>(entity =>
-        {
-            entity.ToTable(nameof(Site));
-
-            entity.HasKey(s => s.Id);
-
-            entity
-                .Property(s => s.CreatedAt)
-                .IsRequired();
-        });
 
         // Varianta č.2
         //modelBuilder.ApplyConfiguration(new ArticleConfiguration());

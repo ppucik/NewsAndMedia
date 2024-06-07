@@ -27,17 +27,18 @@ public class GetArticles
         public async Task<IReadOnlyCollection<ArticleResponse>> Handle(Query query, CancellationToken cancellationToken)
         {
             var request = query.Request;
-            var searchText = request.SearchText?.ToUpper();
+            var searchText = request.SearchTerm?.ToUpper();
+            var sideId = request.SiteId;
             var pageIndex = request.Page ?? 1;
             var pageSize = request.PageSize ?? 10;
 
             var articles = await _dataContext.Articles
                 .AsNoTracking()
                 .Include(a => a.Authors)
-                .Include(a => a.Site)
                 .Where(a => string.IsNullOrEmpty(searchText) || (
                     a.Title.ToUpper().Contains(searchText) ||
                     a.Authors.Any(a => a.Name.ToUpper().Contains(searchText))))
+                .Where(a => !sideId.HasValue || a.SiteId == sideId)
                 .OrderBy(article => article.Title)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)

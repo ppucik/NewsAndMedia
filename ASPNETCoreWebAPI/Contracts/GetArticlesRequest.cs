@@ -10,7 +10,7 @@ public class GetArticlesRequest
     /// <summary>
     /// Časť názvu článku, autor (slovo)
     /// </summary>
-    public string? SearchText { get; set; }
+    public string? SearchTerm { get; set; }
 
     /// <summary>
     /// TD web stránky

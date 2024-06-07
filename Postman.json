@@ -81,7 +81,41 @@
 			"name": "GetArticles",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7076/api/articles",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7076",
+					"path": [
+						"api",
+						"articles"
+					],
+					"query": [
+						{
+							"key": "SearchTerm",
+							"value": "net",
+							"disabled": true
+						},
+						{
+							"key": "SiteId",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "Page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "PageSize",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				}
 			},
 			"response": []
 		},

@@ -29,7 +29,6 @@ public class GetArticle
             var article = await _dataContext.Articles
                 .AsNoTracking()
                 .Include(a => a.Authors)
-                .Include(a => a.Site)
                 .FirstOrDefaultAsync(a => a.Id == query.Id);
 
             return _mapper.Map<ArticleResponse>(article);
