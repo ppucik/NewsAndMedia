@@ -1,6 +1,7 @@
 ﻿using ASPNETCoreWebAPI.Contracts;
 using ASPNETCoreWebAPI.Repositories;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,7 +33,7 @@ public class GetArticles
             var pageIndex = request.Page ?? 1;
             var pageSize = request.PageSize ?? 10;
 
-            var articles = await _dataContext.Articles
+            return await _dataContext.Articles
                 .AsNoTracking()
                 .Include(a => a.Authors)
                 .Where(a => string.IsNullOrEmpty(searchText) || (
@@ -42,9 +43,8 @@ public class GetArticles
                 .OrderBy(article => article.Title)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
+                .ProjectTo<ArticleResponse>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
-            return _mapper.Map<IReadOnlyCollection<ArticleResponse>>(articles);
         }
     }
 }

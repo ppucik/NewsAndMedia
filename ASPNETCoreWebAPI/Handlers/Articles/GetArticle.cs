@@ -1,6 +1,7 @@
 ﻿using ASPNETCoreWebAPI.Contracts;
 using ASPNETCoreWebAPI.Repositories;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,12 +27,11 @@ public class GetArticle
 
         public async Task<ArticleResponse?> Handle(Query query, CancellationToken cancellationToken)
         {
-            var article = await _dataContext.Articles
+            return await _dataContext.Articles
                 .AsNoTracking()
                 .Include(a => a.Authors)
+                .ProjectTo<ArticleResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(a => a.Id == query.Id);
-
-            return _mapper.Map<ArticleResponse>(article);
         }
     }
 }
