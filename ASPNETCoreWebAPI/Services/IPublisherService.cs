@@ -2,5 +2,5 @@
 
 public interface IPublisherService
 {
-    Task SendMessgaes<T>(T message);
+    Task SendMessges<T>(T message);
 }

@@ -29,11 +29,13 @@ public class MathEndpoint : ICarterModule
         IPublisherService publisherService, //IBus massTransitBus,
         IMemoryCache memoryCache)
     {
-        const double DEFAULT_VALUE = 2d;
+        const double DEFAULT_VALUE = 2.0;
+        var now = DateTime.UtcNow;
 
         var result = new CalculationResponse
         {
             InputValue = request.Input,
+            Created = now,
             ComputedValue = DEFAULT_VALUE
         };
 
@@ -44,18 +46,17 @@ public class MathEndpoint : ICarterModule
 
         Console.WriteLine($"You requested key:{key}, looking in cache...");
 
-        if (memoryCache.TryGetValue(key, out CalculationResponse? value))
+        if (memoryCache.TryGetValue(key, out CalculationResponse? cachedValue) && cachedValue != null)
         {
             Console.WriteLine($"Found key:{key}, in the cache!");
 
-            result.PreviousValue = value?.ComputedValue;
-            result.Created = value?.Created ?? DateTime.UtcNow;
+            result.PreviousValue = cachedValue?.ComputedValue;
 
-            if (value?.Created.AddSeconds(15) > DateTime.UtcNow)
+            if (cachedValue?.Created.AddSeconds(15) > now)
             {
                 // output hodnota je tretia odmocnina z prirodzeného logaritmu hodnoty input zo vstupu podelenej hodnotou z globálneho storage
-                Console.WriteLine($"Computing asynchronously value from input:{request.Input}...");
-                result.ComputedValue = await Task.FromResult(Math.Cbrt(Math.Log(Convert.ToDouble(request.Input))) / value.ComputedValue);
+                double inputLog = Math.Log(Convert.ToDouble(request.Input));
+                result.ComputedValue = Math.Cbrt(inputLog) / cachedValue.ComputedValue;
             }
             else
             {
@@ -67,16 +68,15 @@ public class MathEndpoint : ICarterModule
         else
         {
             // ak key poskytnutý cez API nie je nájdený v globálnom key-value storage tak tento <key; value> vytvorte a nastavte value na 2
-            Console.WriteLine($"Could not find key:{key} in the cache!");
+            Console.WriteLine($"Could not find key:{key} in the cache! Creating new entry.");
             result.ComputedValue = DEFAULT_VALUE;
-            result.Created = DateTime.UtcNow;
         }
 
         memoryCache.Set(key, result, memoryOptions);
 
         // výsledok výpočtu pošlite na vami vytvorenú queue v RabbitMQ
-        await publisherService.SendMessgaes(result);    // varianta č.1
-        //await massTransitBus.Publish(result);         // varianta č.2
+        await publisherService.SendMessges(result);    // varianta č.1
+        //await massTransitBus.Publish(result);        // varianta č.2
 
         // následne ju vráťte ako response z endpointu vo formáte JSON
         return TypedResults.Ok(result);

@@ -18,7 +18,7 @@ public class PublisherService : IPublisherService, IDisposable
         _model = _connection.CreateModel();
     }
 
-    public async Task SendMessgaes<T>(T message)
+    public async Task SendMessges<T>(T message)
     {
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);
